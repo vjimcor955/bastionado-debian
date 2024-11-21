@@ -1,0 +1,96 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Bastionar la Seguridad de Debian</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid="ID de Google Analytics"
+                  codelab-ga4id=""
+                  id="bastionado-grub"
+                  title="Bastionar la Seguridad de Debian"
+                  environment="web"
+                  feedback-link="Un enlace en el que los usuarios puedan darte feedback (quizás creando un issue en un repositorio de git)">
+    
+      <google-codelab-step label="Introducción" duration="0">
+        <p>El gestor de arranque GRUB en Debian es el primer software que toma el control del sistema después de la BIOS o UEFI. Su función principal es cargar el sistema operativo, pero también permite acceder a configuraciones avanzadas que, si no se protegen adecuadamente, pueden ser manipuladas por usuarios no autorizados, comprometiendo la seguridad del sistema.</p>
+<p>Esta guía ofrece pasos prácticos para configurar la seguridad en GRUB, fortaleciendo su protección con medidas como la configuración de contraseñas, el ocultamiento del menú y la realización de copias de seguridad, garantizando así un arranque seguro y controlado.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Configuración de la contraseña de arranque" duration="0">
+        <p>El primer paso para garantizar el inicio seguro de Debian es configurar una contraseña en el gestor de arranque GRUB. Esto impide que usuarios no autorizados modifiquen las opciones de arranque o carguen otro sistema operativo sin permiso.</p>
+<p>Para configurarlo, abre el terminal y genera una contraseña cifrada para GRUB utilizando el comando: <strong>grub-mkpasswd-pbkdf2</strong>. Escribe una contraseña robusta y copia su hash.</p>
+<p class="image-container"><img alt="Generar contraseña" src="img\\a98d8210c287afd0.png"></p>
+<p>Una vez generada la contraseña la configura el archivo de entrada con <strong>nano /etc/grub.d/40_custom</strong>.</p>
+<ul>
+<li>Configurar Usuario: set superuser=&#34;USUARIO&#34;</li>
+<li>Configurar contraseña: password_pbkdf2 USUARIO HASH_CONTRASEÑA</li>
+</ul>
+<p class="image-container"><img alt="Añadir contraseña" src="img\\7c9308474b80bbd6.png"></p>
+<p>Y por ultimo actualiza el GRUB con <strong>update-grub</strong>.</p>
+<p class="image-container"><img alt="Actualizar GRUB" src="img\\d5ec958a2cd31bb.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Ocultar el menú de arranque" duration="0">
+        <p>Ocultar el menú de arranque de GRUB hace que el sistema inicie directamente el sistema operativo de forma predeterminada. Para ello añade las siguientes líneas al archivo de configuración de GRUB con <strong>nano /etc/default/grub</strong>.</p>
+<pre><code>GRUB_TIMEOUT=0
+GRUB_HIDDEN_TIMEOUT=0
+</code></pre>
+<p class="image-container"><img alt="Grub timeout" src="img\\ae0d083d26d03849.png"></p>
+<p>Una vez añadidas estas opciones actualiza el GRUB con <strong>update-grub</strong>.</p>
+<p class="image-container"><img alt="Actualizar GRUB" src="img\\cc88d8b2d39a238e.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Copia de seguridad de la configuración de arranque" duration="0">
+        <p>Crear una copia de seguridad de la configuración de la GRUB es clave, ya que cualquier problema puede impedir que el sistema arranque correctamente y en ese caso tener una copia de estos archivos puede ser la solución.</p>
+<p>Para crear una copia de dicha configuración usa <strong>cp /boot/grub/grub.cfg /ruta/del/destino</strong>. Recuerda guardar la copia de seguridad en un lugar seguro y accesible.</p>
+<p class="image-container"><img alt="Copia seguridad" src="img\\b3a0e3a3ba608344.png"></p>
+<p>Comprueba que el archivo se copie correctamente en el destino.</p>
+<p class="image-container"><img alt="Archivo guardado" src="img\\1ec708fe635fd0ef.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Otras opciones de seguridad" duration="0">
+        <h2 is-upgraded>Bloquear el acceso de root al ssh</h2>
+<p>Para impedir que el root pueda acceder a la máquina por SSH, edita su archivo de configuración con <strong>nano /etc/ssh/sshd_config</strong> y añade las siguientes opciones:</p>
+<pre><code>PermitRootLogin no
+PasswordAuthentication no
+</code></pre>
+<p class="image-container"><img alt="Root SSH" src="img\\91768b25185e913a.png"></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
